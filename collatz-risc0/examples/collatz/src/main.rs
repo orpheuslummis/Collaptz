@@ -29,7 +29,7 @@ pub struct Journal {
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Output {
     pub output_sequence: Vec<u32>,
-    pub proof: Vec<u32>,
+    pub proof: Vec<u8>,
     pub image_id: [u32; 8],
 }
 
