@@ -54,7 +54,7 @@ fn main() {
     };
 
     let out_json = serde_json::to_string(&out).expect("Failed to serialize to JSON");
-    println!("Output in JSON format: {}", out_json);
+    // println!("Output in JSON format: {}", out_json);
 
     let url = env::var("API_URL").unwrap_or_else(|_| DEFAULT_API_URL.to_string());
     upload(url, out_json).expect("Failed to upload to API");
