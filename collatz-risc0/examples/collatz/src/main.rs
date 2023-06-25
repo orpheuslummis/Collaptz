@@ -39,6 +39,8 @@ const DEFAULT_N: i32 = 100_000_000;
 fn main() {
     let n = sample_parameter(DEFAULT_N);
 
+    println!("n = {}", n);
+
     let (receipt, _) = do_collatz(n);
 
     receipt.verify(COLLATZ_ID.into()).expect(
