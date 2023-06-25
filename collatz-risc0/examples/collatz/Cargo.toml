@@ -7,11 +7,10 @@ edition = "2021"
 collatz-methods = { path = "methods" }
 futures = "0.3.28"
 rand = "0.8.5"
-reqwest = { version = "0.11", features = ["json", "tokio-native-tls"] }
+reqwest = { version = "0.11", features = ["json", "blocking"] }
 risc0-zkvm = { path = "../../risc0/zkvm" }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0.99"
-# tokio = { version = "1", features = ["full"] }
 
 [features]
 cuda = ["risc0-zkvm/cuda"]

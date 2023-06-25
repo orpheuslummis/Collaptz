@@ -16,9 +16,8 @@ use std::env;
 
 use collatz::do_collatz;
 use collatz_methods::COLLATZ_ID;
-use futures::executor::block_on;
 use rand::distributions::{Distribution, Uniform};
-use reqwest;
+use reqwest::{self};
 use risc0_zkvm::serde::from_slice;
 use serde::{Deserialize, Serialize};
 
@@ -34,7 +33,7 @@ pub struct Output {
     pub program_digest: [u32; 8],
 }
 
-const DEFAULT_API_URL: &'static str = "http://localhost:8000";
+const DEFAULT_API_URL: &'static str = "http://localhost:8000/public/data/actions/create";
 
 // #[derive(Serialize)]
 // struct Output {
@@ -50,7 +49,7 @@ fn main() {
 
     // send your binary
     // send your input??
-    // receive proof and output 
+    // receive proof and output
 
     // Just in case!
     receipt.verify(COLLATZ_ID.into()).expect(
@@ -86,16 +85,22 @@ pub fn sample_parameter(upper_bound: u64) -> u64 {
     rv.sample(&mut rng)
 }
 
-fn upload(url: String, data: String) -> std::result::Result<(), std::io::Error> {
-    let client = reqwest::Client::new();
-    let res = block_on(
-        client
-            .post(url)
-            .body(data)
-            .header(reqwest::header::CONTENT_TYPE, "application/json")
-            .send(),
-    )
-    .map_err(|err| std::io::Error::new(std::io::ErrorKind::Other, err.to_string()))?;
+fn upload(url: String, data: String) -> std::result::Result<(), reqwest::Error> {
+    let client = reqwest::blocking::Client::new();
+
+    let res = client
+        .post(&url)
+        .body(data)
+        .header(reqwest::header::CONTENT_TYPE, "application/json")
+        .send();
+
+    match res {
+        Ok(res) => {
+            println!("Status: {}", res.status());
+            println!("Headers: {:?}", res.headers());
+        }
+        Err(_) => {}
+    }
     Ok(())
 }
 

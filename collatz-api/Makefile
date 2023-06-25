@@ -11,7 +11,7 @@ migration_message = ""
 .PHONY: test run
 
 requirements.txt: requirements.in
-	pip-compile --quiet --generate-hashes --allow-unsafe --resolver=backtracking --output-file=$@
+	pip-compile --quiet --generate-hashes ---unsafe --resolver=backtracking --output-file=$@
 
 format:
 	isort $(formatted_code)

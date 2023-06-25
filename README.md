@@ -1,17 +1,26 @@
 # Collaptz
 
+TODO
 
-# Set up the HTTP API
+## Compute a Collatz sequence and contribute it to the public data pool
 
-- pip install pip-tools
-- pip install -r requirements.txt 
-- docker
-- docker-compose up -d db
-- make migrate
-- pip install -r requirements.txt
-- make requirements.txt 
-- make migrate
-- pip install -r requirements.txt 
-- make migrate
-- make run 
+```shell
+cd collatz-risc0/examples/collatz/
+cargo run
+```
 
+## Start the HTTP API
+
+```shell
+cd collatz-api
+# python -m venv .venv
+source .venv/bin/activate
+pip install pip-tools alembic
+pip install -r requirements.txt 
+ensure docker is installed
+create .env file with db credentials
+docker-compose up -d db
+make migration
+make migrate
+make run 
+```
