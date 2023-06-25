@@ -14,7 +14,6 @@
 
 use std::env;
 
-// use clap::{App, Arg};
 use collatz::do_collatz;
 use collatz_methods::COLLATZ_ID;
 use rand::distributions::{Distribution, Uniform};
@@ -30,46 +29,14 @@ pub struct Journal {
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Output {
     pub output_sequence: Vec<u32>,
-    pub proof: Vec<u8>,
+    pub proof: Vec<u32>,
     pub image_id: [u32; 8],
 }
 
 const DEFAULT_API_URL: &'static str = "http://localhost:8000/public/data/actions/create";
-const DEFAULT_N: i32 = 100000000;
-
-// #[derive(Parser)]
-// #[clap(about, version, author)]
-// struct Args {
-//     number: i32,
-// }
-
-// optional arg
+const DEFAULT_N: i32 = 100_000_000;
 
 fn main() {
-    // let matches = App::new("Collaptz")
-    //     .about("Compute a zkCollatz sequence locally and contribute it to the
-    // data pool.")     .arg(
-    //         Arg::new("number")
-    //             .short('n')
-    //             .long("number")
-    //             .value_name("NUMBER")
-    //             .about("An optional integer")
-    //             .takes_value(true),
-    //     )
-    //     .get_matches();
-
-    // let args = Args {
-    //     number: matches.value_of("number").and_then(|n| n.parse().ok()),
-    // };
-
-    // // let args = Args::parse();
-
-    // // Use the supplied number, or if it's None, call `sample_parameter`.
-    // let n = match args.number {
-    //     Some(n) => n,
-    //     None => sample_parameter(DEFAULT_N),
-    // };
-
     let n = sample_parameter(DEFAULT_N);
 
     let (receipt, _) = do_collatz(n);
@@ -78,8 +45,7 @@ fn main() {
         "Code you have proven should successfully verify; did you specify the correct image ID?",
     );
 
-    let outputs: Journal =
-        from_slice(&receipt.get_journal()).expect("Journal didn't deserialize well.");
+    let outputs: Journal = from_slice(&receipt.get_journal()).expect("Journal didn't deserialize well.");
 
     let out = Output {
         output_sequence: outputs.sequence,
