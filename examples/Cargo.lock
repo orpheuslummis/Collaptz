@@ -638,6 +638,7 @@ name = "collatz"
 version = "0.1.0"
 dependencies = [
  "collatz-methods",
+ "futures",
  "rand",
  "reqwest",
  "risc0-zkvm",
