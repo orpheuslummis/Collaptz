@@ -19,7 +19,7 @@ use risc0_zkvm::{
 
 // #[doc = include_str!("../README.md")]
 
-pub fn do_collatz(n: u64) -> (Box<dyn SessionReceipt>, u64) {
+pub fn do_collatz(n: i32) -> (Box<dyn SessionReceipt>, i32) {
     let env = ExecutorEnv::builder()
         .add_input(&to_vec(&n).unwrap())
         .build()
@@ -32,11 +32,9 @@ pub fn do_collatz(n: u64) -> (Box<dyn SessionReceipt>, u64) {
     let receipt = session.prove().unwrap();
 
     // TBD
-    let c: u64 = from_slice(receipt.get_journal()).expect(
+    let c: i32 = from_slice(receipt.get_journal()).expect(
         "Journal output should deserialize into the same types (& order) that it was written",
     );
-
-    println!("We get collatz {}", c);
 
     (receipt, c)
 }

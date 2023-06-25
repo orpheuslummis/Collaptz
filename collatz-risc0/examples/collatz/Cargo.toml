@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+clap = { version = "4.3.8", features = ["derive"]}
 collatz-methods = { path = "methods" }
 futures = "0.3.28"
 rand = "0.8.5"

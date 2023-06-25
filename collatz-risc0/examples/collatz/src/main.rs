@@ -14,6 +14,7 @@
 
 use std::env;
 
+// use clap::{App, Arg};
 use collatz::do_collatz;
 use collatz_methods::COLLATZ_ID;
 use rand::distributions::{Distribution, Uniform};
@@ -23,55 +24,70 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Journal {
-    pub sequence: Vec<u32>, // Rust question or a Vec
+    pub sequence: Vec<u32>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Output {
-    pub sequence: Vec<u32>,
-    pub receipt: Vec<u8>,
-    pub program_digest: [u32; 8],
+    pub output_sequence: Vec<u32>,
+    pub proof: Vec<u8>,
+    pub image_id: [u32; 8],
 }
 
 const DEFAULT_API_URL: &'static str = "http://localhost:8000/public/data/actions/create";
+const DEFAULT_N: i32 = 100000000;
 
-// #[derive(Serialize)]
-// struct Output {
-//     sequence: Vec<i32>,
-//     proof: Vec<u8>,
-//     program_digest: String,
+// #[derive(Parser)]
+// #[clap(about, version, author)]
+// struct Args {
+//     number: i32,
 // }
 
+// optional arg
+
 fn main() {
-    let n = sample_parameter(100000000); // WIP
+    // let matches = App::new("Collaptz")
+    //     .about("Compute a zkCollatz sequence locally and contribute it to the
+    // data pool.")     .arg(
+    //         Arg::new("number")
+    //             .short('n')
+    //             .long("number")
+    //             .value_name("NUMBER")
+    //             .about("An optional integer")
+    //             .takes_value(true),
+    //     )
+    //     .get_matches();
+
+    // let args = Args {
+    //     number: matches.value_of("number").and_then(|n| n.parse().ok()),
+    // };
+
+    // // let args = Args::parse();
+
+    // // Use the supplied number, or if it's None, call `sample_parameter`.
+    // let n = match args.number {
+    //     Some(n) => n,
+    //     None => sample_parameter(DEFAULT_N),
+    // };
+
+    let n = sample_parameter(DEFAULT_N);
 
     let (receipt, _) = do_collatz(n);
 
-    // send your binary
-    // send your input??
-    // receive proof and output
-
-    // Just in case!
     receipt.verify(COLLATZ_ID.into()).expect(
         "Code you have proven should successfully verify; did you specify the correct image ID?",
     );
 
-    // store_to_file(receipt.encode());
-
-    // extract/gather our data
-    println!("DEBUG: the COLLATZ_ID is {{{:?}}}", COLLATZ_ID);
-    // let vec = receipt.get_journal();
     let outputs: Journal =
         from_slice(&receipt.get_journal()).expect("Journal didn't deserialize well.");
 
     let out = Output {
-        sequence: outputs.sequence,
-        receipt: receipt.encode(),
-        program_digest: COLLATZ_ID,
+        output_sequence: outputs.sequence,
+        proof: receipt.encode(),
+        image_id: COLLATZ_ID,
     };
 
     let out_json = serde_json::to_string(&out).expect("Failed to serialize to JSON");
-    // question: how is the serialization of the byte array in json?
     println!("Output in JSON format: {}", out_json);
 
     let url = env::var("API_URL").unwrap_or_else(|_| DEFAULT_API_URL.to_string());
@@ -79,7 +95,7 @@ fn main() {
 }
 
 // Random sample from uniform distribution: integer in [1, upper_bound].
-pub fn sample_parameter(upper_bound: u64) -> u64 {
+pub fn sample_parameter(upper_bound: i32) -> i32 {
     let mut rng = rand::thread_rng();
     let rv = Uniform::new_inclusive(1, upper_bound);
     rv.sample(&mut rng)
@@ -103,29 +119,3 @@ fn upload(url: String, data: String) -> std::result::Result<(), reqwest::Error> 
     }
     Ok(())
 }
-
-// /// Upload body to a given URL
-// fn put_data<T: Into<reqwest::blocking::Body>>(&self, url: &str, body: T) ->
-// Result<()> {     let res = self
-//         .client
-//         .put(url)
-//         .body(body)
-//         .send()
-//         .context("Failed to PUT data to destination")?;
-//     if !res.status().is_success() {
-//         bail!("Failed to PUT to provided URL");
-//     }
-
-//     Ok(())
-// }
-
-// fn store_to_file(receipt_bytes: Vec<u8>, file_path: &str) -> Result<()> {
-//     let mut file = File::create(file_path)?;
-
-//     file.write_all(&receipt_bytes)?;
-
-//     // It's a good practice to flush any buffered data to the underlying
-// medium     file.flush()?;
-
-//     Ok(())
-// }

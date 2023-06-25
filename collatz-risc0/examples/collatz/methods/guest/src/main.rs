@@ -19,16 +19,15 @@ use risc0_zkvm::guest::env;
 risc0_zkvm::guest::entry!(main);
 
 pub fn main() {
-    let n: u64 = env::read();
+    let n: i32 = env::read();
 
     let seq = collatz(n);
 
     env::commit(&seq);
 }
 
-// TODO confirm data type. big array
-fn collatz(mut n: u64) -> Vec<u64> {
-    let mut output: Vec<u64> = Vec::new();
+fn collatz(mut n: i32) -> Vec<i32> {
+    let mut output: Vec<i32> = Vec::new();
     output.push(n);
 
     while n != 1 {
