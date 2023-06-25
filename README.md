@@ -1,6 +1,6 @@
 # Collaptz
 
-**Collaptz** is an open computational task, a collaborative verifiable system, to experiment the Collatz conjecture.
+**Collaptz** is an open computational task, a collaborative verifiable system, to empirically verify the Collatz conjecture.
 
 The computational integrity we obtain from running part of the computation in a zkVM allows to trustlessly distribute the computation, thereby allowing contributions from public/untrusted participants.
 
@@ -43,7 +43,7 @@ cd collatz-risc0/examples/collatz/
 cargo run
 ```
 
-### Frontend for live visualization of the newly computed sequence
+### Spin up a Frontend for live visualization of the newly computed sequence
 ```shell
 pip install -e . 
 python frontend/dashboard.py
@@ -52,4 +52,4 @@ python frontend/dashboard.py
 
 ## "The Collatz Thinker" NFT
 A NFT of the resulting public computation will be offered in auction late 2023.
-
+You can think of a progressive sequence generation as a form of generative art!
