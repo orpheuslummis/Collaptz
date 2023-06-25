@@ -34,11 +34,11 @@ fn main() {
     // Load the receipt from file
     let receipt = load_receipt(Path::new(&args.receipt_file));
 
-    // Retrieve the sequence that was computed
-    // let sequence: Vec<u64> = from_slice(receipt.get_journal()).expect(
-    //     "Journal output should deserialize into the same types (& order) that it was written",
-    // );
-
     // Verify receipt
     receipt.verify(image_id).unwrap();
+
+    // Retrieve the sequence that was computed and write it to stdout
+    // TODO: this fails with ^^^^ expected `Vec<u32>`, found `Result<_, Error>`
+    // let sequence: Vec<u32> = risc0_zkvm::serde::from_slice(&receipt.journal);
+    // println!("Sequence: {:?}", sequence);
 }
