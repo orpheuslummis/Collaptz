@@ -1,4 +1,6 @@
 import os
+import subprocess
+from pathlib import Path as Path
 
 from fastapi import APIRouter, Body, Depends, Path, HTTPException, Query
 
@@ -29,14 +31,21 @@ async def add_sequence(
 ) -> CollatzSequenceResponse:
     """Adds new sequence."""
 
-    fname = f'{body.input_value}_receipt.dat'
+    fname = Path(f"{body.input_value}_receipt").with_suffix(".dat")
     with open(fname) as f:
         f.write(body.proof)
 
     # 1. Check that the proof is valid
-    out = os.system(f"cargo run -- {body.image_id} {fname}")
-    if out == 0:
-        raise HTTPException(status_code=400, detail="Invalid proof.")
+    print(body)
+    res = subprocess.run(f"cargo run -- {body.image_id} {fname.absolute()}", shell=True, check=True)
+    try:
+        res.check_returncode()
+    except subprocess.CalledProcessError as e:
+        raise HTTPException(status_code=400, detail="Invalid proof.") from e
+
+    # replace the sequence with the one from the journal
+    print(res.stdout)
+    body.output_sequence = res.stdout
 
     # 2. If the proof is valid, insert the data into the database
     stored_data = await collatz_repo.create(data=body)
