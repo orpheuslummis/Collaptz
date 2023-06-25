@@ -1,0 +1,33 @@
+#Ignore the environment-related things
+.env
+.env.*
+venv
+.venv/
+env/
+env_file.env
+test.env
+
+#Ignoring git and cache folders
+.git
+.cache
+.gitignore
+**/__pycache__/
+
+#Ignoring all the markdown and class files
+*.md
+**/*.class
+
+#Ignore Dockerfile
+Dockerfile
+docker-compose.yml
+Makefile
+
+#Miscellaneous - remove some of these when configuring CI/CD (ex: tests)
+README.md
+Makefile
+
+
+
+.coverage
+htmlcov
+.cache/
