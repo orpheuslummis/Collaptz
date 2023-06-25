@@ -75,8 +75,14 @@ Spin up a Frontend for live visualization of the newly computed sequences.
 python frontend/dashboard.py
 ```
 
+Check out the following pages for even cooler visualisations of Collatz sequences:
+
+ - [Overlayed Line Plots](https://tools.opencurve.info/collatzconjecture/collatzcollection.html)
+ - [Harriss Plot](https://tools.opencurve.info/collatzconjecture/collatz-harriss.html#graph)
+
 ---
 
 ## "The Collatz Thinker" NFT
 A NFT of the resulting public computation will be offered in auction late 2023.
 You can think of a progressive sequence generation as a form of generative art!
+
