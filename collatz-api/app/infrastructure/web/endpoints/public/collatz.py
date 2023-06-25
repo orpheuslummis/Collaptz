@@ -34,23 +34,31 @@ async def add_sequence(
     path.mkdir(exist_ok=True)
     fname = path / pathlib.Path(f"{body.input_value}_receipt").with_suffix(".dat")
     fname.touch()
-    with open(fname, 'w') as f:
-        f.write(body.proof)
+    with open(fname, 'wb') as f:
+        f.write(bytes(body.proof))
 
     # 1. Check that the proof is valid
-    print(body)
-    res = subprocess.run(f"cargo run -- {body.image_id} {fname.absolute()}", shell=True, check=True)
+    print(body.output_sequence)
+    res = subprocess.run(
+        f"cargo run -- '{body.image_id}' {fname.absolute()}",
+        shell=True, check=True,
+        cwd='../verifier',
+    )
     try:
         res.check_returncode()
     except subprocess.CalledProcessError as e:
         raise HTTPException(status_code=400, detail="Invalid proof.") from e
 
     # replace the sequence with the one from the journal
-    print(res.stdout)
-    body.output_sequence = res.stdout
+    # TODO: fix the verifier return of the sequence
+    # print(res.stdout)
+    # body.output_sequence = res.stdout
 
     # 2. If the proof is valid, insert the data into the database
-    stored_data = await collatz_repo.create(data=body)
+    try:
+        stored_data = await collatz_repo.create(data=body)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Could not insert into the DB due to: {e}") from e
 
     return CollatzSequenceResponse(**stored_data.dict())
 
@@ -70,7 +78,6 @@ async def get_sequence(
 
     if not retrieved_data:
         raise HTTPException(status_code=404, detail="Resource not found")
-
 
     return CollatzSequenceResponse(**retrieved_data.dict())
 

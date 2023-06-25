@@ -18,7 +18,7 @@ class CollatzRepo(ICollatzRepo):
         insert_statement = COLLATZ_DATA.insert().values(
             input_value=data.input_value,
             output_sequence=data.output_sequence,
-            proof=data.proof,
+            proof=str(data.proof),
         )
 
         id = await self.db.execute(insert_statement)
