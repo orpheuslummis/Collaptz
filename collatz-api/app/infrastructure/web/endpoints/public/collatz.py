@@ -7,7 +7,7 @@ from app.dependencies import get_example_service, get_example_repo
 
 from app.usecases.schemas.collatz import (
     CollatzPostRequestBody,
-    CollatzSequenceRepsonse,
+    CollatzSequenceResponse,
     CollatzSequencesByRangeResponse,
 )
 
@@ -20,14 +20,14 @@ collatz_router = APIRouter(tags=["Collatz Data"])
 @collatz_router.post(
     "/actions/create",
     status_code=201,
-    response_model=None,
+    response_model=CollatzSequenceResponse,
 )
 async def add_sequence(
     body: CollatzPostRequestBody = Body(...),
     collatz_repo: ICollatzRepo = Depends(get_example_repo),
     example_service: IExampleManager = Depends(get_example_service),
-) -> None:
-    """Issues new challenge."""
+) -> CollatzSequenceResponse:
+    """Adds new sequence."""
 
     fname = f'{body.input_value}_receipt.dat'
     with open(fname) as f:
@@ -41,16 +41,18 @@ async def add_sequence(
     # 2. If the proof is valid, insert the data into the database
     stored_data = await collatz_repo.create(data=body)
 
+    return CollatzSequenceResponse(**stored_data.dict())
+
 
 @collatz_router.get(
     "/{input_value}",
     status_code=200,
-    response_model=CollatzSequenceRepsonse,
+    response_model=CollatzSequenceResponse,
 )
 async def get_sequence(
     input_value: int = Path(...),
     collatz_repo: ICollatzRepo = Depends(get_example_repo),
-) -> CollatzSequenceRepsonse:
+) -> CollatzSequenceResponse:
     """Retrieve stuff from the database."""
 
     retrieved_data = await collatz_repo.retrieve_by_input_value(input_value=input_value)
@@ -59,7 +61,7 @@ async def get_sequence(
         raise HTTPException(status_code=404, detail="Resource not found")
 
 
-    return CollatzSequenceRepsonse(**retrieved_data.dict())
+    return CollatzSequenceResponse(**retrieved_data.dict())
 
 
 @collatz_router.get(

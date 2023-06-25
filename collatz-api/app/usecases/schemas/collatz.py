@@ -32,7 +32,7 @@ class CollatzDataInDb(CollatzBase):
     updated_at: datetime
 
 
-class CollatzSequenceRepsonse(CollatzDataInDb):
+class CollatzSequenceResponse(CollatzDataInDb):
     """Same as database object."""
 
 
