@@ -20,11 +20,6 @@ Useful patterns and surprises might lie within this computation.
 
 ## Contribute to the public dataset of Collatz sequences
 
-```shell
-cd collatz-risc0/examples/collatz/
-cargo run
-```
-
 ## Start the HTTP API
 
 ```shell
@@ -38,7 +33,20 @@ create .env file with db credentials
 docker-compose up -d db
 make migration
 make migrate
-make run 
+make run
+```
+
+### Run the ZK computer that would generate the proof and upload it the the DB
+
+```shell
+cd collatz-risc0/examples/collatz/
+cargo run
+```
+
+### Frontend for live visualization of the newly computed sequence
+```shell
+pip install -e . 
+python frontend/dashboard.py
 ```
 
 

@@ -7,8 +7,10 @@ build-backend = "setuptools.build_meta"
 name = "collatz"
 version = "0.0.1"
 requires-python = ">=3.7"
-dependencies=[
-    'python-dotenv',  # Environment variables
-    'dash',  # Environment variables
+dependencies = [
+    'plotly',
+    'pandas',
+    'dash',
+    'requests',
+    'typing_extensions',
 ]
-

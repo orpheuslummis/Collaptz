@@ -30,24 +30,30 @@ async def add_sequence(
 ) -> CollatzSequenceResponse:
     """Adds new sequence."""
 
-    path = pathlib.Path("receipts")
-    path.mkdir(exist_ok=True)
-    fname = path / pathlib.Path(f"{body.input_value}_receipt").with_suffix(".dat")
-    fname.touch()
-    with open(fname, 'wb') as f:
-        f.write(bytes(body.proof))
+    if body.proof:
 
-    # 1. Check that the proof is valid
-    print(body.output_sequence)
-    res = subprocess.run(
-        f"cargo run -- '{body.image_id}' {fname.absolute()}",
-        shell=True, check=True,
-        cwd='../verifier',
-    )
-    try:
-        res.check_returncode()
-    except subprocess.CalledProcessError as e:
-        raise HTTPException(status_code=400, detail="Invalid proof.") from e
+        path = pathlib.Path("receipts")
+        path.mkdir(exist_ok=True)
+        fname = path / pathlib.Path(f"{body.input_value}_receipt").with_suffix(".dat")
+        fname.touch()
+        with open(fname, 'wb') as f:
+            f.write(bytes(body.proof))
+
+        # 1. Check that the proof is valid
+        print(body.output_sequence)
+        res = subprocess.run(
+            f"cargo run -- '{body.image_id}' {fname.absolute()}",
+            shell=True, check=True,
+            cwd='../verifier',
+        )
+        try:
+            res.check_returncode()
+        except subprocess.CalledProcessError as e:
+            raise HTTPException(status_code=400, detail="Invalid proof.") from e
+
+    else:
+        # We by-pass the prover initially, just to fill up the DB for visualization sake
+        pass
 
     # replace the sequence with the one from the journal
     # TODO: fix the verifier return of the sequence
