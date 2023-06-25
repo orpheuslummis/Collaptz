@@ -1,6 +1,5 @@
-import os
 import subprocess
-from pathlib import Path as Path
+import pathlib
 
 from fastapi import APIRouter, Body, Depends, Path, HTTPException, Query
 
@@ -31,8 +30,11 @@ async def add_sequence(
 ) -> CollatzSequenceResponse:
     """Adds new sequence."""
 
-    fname = Path(f"{body.input_value}_receipt").with_suffix(".dat")
-    with open(fname) as f:
+    path = pathlib.Path("receipts")
+    path.mkdir(exist_ok=True)
+    fname = path / pathlib.Path(f"{body.input_value}_receipt").with_suffix(".dat")
+    fname.touch()
+    with open(fname, 'w') as f:
         f.write(body.proof)
 
     # 1. Check that the proof is valid
