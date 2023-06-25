@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+    collatz-api:                    
+        build: .
+        ports:
+        - "8000:8000"
+        container_name: collatz-api
+        env_file: 
+        - .env
+        depends_on:
+        - db   
+
+    db:
+        image: library/postgres:12-alpine
+        environment:
+            - POSTGRES_HOST=db
+            - POSTGRES_PORT=6969
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_DB=collatz-dev
+        ports:
+            - 6969:6969
+        command: -p 6969
