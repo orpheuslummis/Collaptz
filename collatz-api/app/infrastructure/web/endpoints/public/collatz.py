@@ -1,3 +1,5 @@
+import os
+
 from fastapi import APIRouter, Body, Depends, Path, HTTPException, Query
 
 
@@ -27,7 +29,14 @@ async def add_sequence(
 ) -> None:
     """Issues new challenge."""
 
+    fname = f'{body.input_value}_receipt.dat'
+    with open(fname) as f:
+        f.write(body.proof)
+
     # 1. Check that the proof is valid
+    out = os.system(f"cargo run -- {body.image_id} {fname}")
+    if out == 0:
+        raise HTTPException(status_code=400, detail="Invalid proof.")
 
     # 2. If the proof is valid, insert the data into the database
     stored_data = await collatz_repo.create(data=body)
