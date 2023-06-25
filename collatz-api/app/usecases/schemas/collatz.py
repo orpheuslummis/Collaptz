@@ -6,6 +6,9 @@ from pydantic import BaseModel, Field
 class CollatzBase(BaseModel):
     """The core data object for storing collatz-related data."""
 
+    input_value: int = Field(
+        ..., description="An input for a given collatz conjecture iteration.", example=1
+    )
     output_sequence: List[int] = Field(
         ...,
         description="The sequence of numbers resulting from following the two rules of the collatz protocol.",
@@ -16,10 +19,6 @@ class CollatzBase(BaseModel):
         description="Base64-encoded bytes, representing the proof of computation.",
         example="SGksIG15IG5hbWUgaXMgcG9vcC4=",
     )
-
-    @property
-    def property(self):
-        return self.output_sequence[0]
 
 
 class CollatzPostRequestBody(CollatzBase):
