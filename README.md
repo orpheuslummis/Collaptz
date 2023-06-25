@@ -18,37 +18,64 @@ While the conjecture has been heavily studied, sequences have explored up to $2^
 Useful patterns and surprises might lie within this computation.
 
 
-## Contribute to the public dataset of Collatz sequences
+## Contribute to the public dataset of Collatz sequences!
 
-## Start the HTTP API
+---
+
+# Architecture
+
+## Storage layer (accessible via HTTP API)
+
+### Install
 
 ```shell
 cd collatz-api
-# python -m venv .venv
+# python -m venv .venv  # create a virtual environment
 source .venv/bin/activate
 pip install pip-tools alembic
 pip install -r requirements.txt 
-ensure docker is installed
-create .env file with db credentials
+```
+
+Also ensure that docker and docker-compose are installed.
+
+### Run the API
+
+Create .env file with full DB_URL
+
+```shell
 docker-compose up -d db
 make migration
 make migrate
 make run
 ```
 
-### Run the ZK computer that would generate the proof and upload it the the DB
+## ZK computer
+
+Compile the Rust program on risc0 zkVM, run it and generate the proof of computational integrity.
+After the computation is complete, it will be uploaded to the storage layer via HTTP API.
 
 ```shell
 cd collatz-risc0/examples/collatz/
 cargo run
 ```
 
-### Spin up a Frontend for live visualization of the newly computed sequence
+
+## Explore the data
+
+
+### Install the plotly dash frontend
+
 ```shell
 pip install -e . 
+````
+
+Spin up a Frontend for live visualization of the newly computed sequences.
+
+```shell
 python frontend/dashboard.py
 ```
 
+---
 
 ## "The Collatz Thinker" NFT
 A NFT of the resulting public computation will be offered in auction late 2023.
