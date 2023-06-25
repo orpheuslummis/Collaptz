@@ -16,9 +16,14 @@ class CollatzBase(BaseModel):
         description="Base64-encoded bytes, representing the proof of computation.",
         example="SGksIG15IG5hbWUgaXMgcG9vcC4=",
     )
+    image_id: List[int] = Field(
+        ...,
+        description="A binary representing the hash of the program that ran the collatz code.",
+        example=[837, 12, 37827],
+    )
 
     @property
-    def property(self):
+    def input_value(self):
         return self.output_sequence[0]
 
 
