@@ -1,5 +1,7 @@
 # Collaptz
 
+# [Collaptz | ETHGlobal Waterloo 2023 - Winner of 🥈 Risc Zero — Best Use of Bonsai](https://ethglobal.com/showcase/collaptz-623pz)
+
 **Collaptz** is an open computational task, a collaborative verifiable system, to empirically verify the Collatz conjecture.
 
 The computational integrity we obtain from running part of the computation in a zkVM allows to trustlessly distribute the computation, thereby allowing contributions from public/untrusted participants.
