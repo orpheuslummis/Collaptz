@@ -1,6 +1,6 @@
 # Collaptz
 
-# [Collaptz | ETHGlobal Waterloo 2023 - Winner of 🥈 Risc Zero — Best Use of Bonsai](https://ethglobal.com/showcase/collaptz-623pz)
+## [Collaptz | ETHGlobal Waterloo 2023 - Winner of 🥈 Risc Zero — Best Use of Bonsai](https://ethglobal.com/showcase/collaptz-623pz)
 
 **Collaptz** is an open computational task, a collaborative verifiable system, to empirically verify the Collatz conjecture.
 
